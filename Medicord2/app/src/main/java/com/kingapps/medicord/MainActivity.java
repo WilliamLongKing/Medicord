@@ -46,108 +46,61 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent fileIntent = new Intent(MainActivity.this, fileActivity.class);
+                Log.d("POOP", "I HIT THE BUTTON");
+
                 MainActivity.this.startActivity(fileIntent);
+
             }
         });
         uploadbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("POOP", "I HIT THE BUTTON");
-                testNetwork();
-                dispatchTakePictureIntent();
+                Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
+                startActivity(intent1);
+//                dispatchTakePictureIntent();
             }
         });
     }
 
-    public void testNetwork() {
-        FhirContext ctxDstu2 = FhirContext.forDstu2();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://hapi.fhir.org/baseDstu2/")
-                .addConverterFactory(FhirConverterFactory.create(ctxDstu2))
-                .client(getOkHttpClient())
-                .build();
-
-        PatientInterface service = retrofit.create(PatientInterface.class);
-
-        //Make a call to the website
-        Call<Bundle> call = service.getPatient();
-
-        call.enqueue(new Callback<Bundle>() {
-
-            @Override
-            public void onResponse(Call<Bundle> call, Response<Bundle> response) {
-                Log.d("POOP", "Starting");
-
-                for (Bundle.Entry e: response.body().getEntry()) Log.d("POOP", e.toString());
-
-//                Patient dataPatient = response.body();
-//                Log.d("POOP", dataPatient.toString());
-            }
-//            markiantorno@gmail.com
-//            @iantoryes
+//    String mCurrentPhotoPath;
 //
-//            Toronto Android Developers Group
-//            Eric Funguh
+//    private File createImageFile() throws IOException {
+//        // Create an image file name
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = "JPEG_" + timeStamp + "_";
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
 //
-//            AndroidTO
-
-            @Override
-            public void onFailure(Call<Bundle> call, Throwable t) {
-                Log.d("POOP", "Things are bad");
-            }
-        });
-
-    }
-
-    private static OkHttpClient getOkHttpClient(){
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.NONE);
-        OkHttpClient okClient = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-        return okClient;
-    }
-
-    String mCurrentPhotoPath;
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    static final int REQUEST_TAKE_PHOTO = 1;
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
-    }
+//        // Save a file: path for use with ACTION_VIEW intents
+//        mCurrentPhotoPath = image.getAbsolutePath();
+//        return image;
+//    }
+//
+//    static final int REQUEST_TAKE_PHOTO = 1;
+//
+//    private void dispatchTakePictureIntent() {
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        // Ensure that there's a camera activity to handle the intent
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            // Create the File where the photo should go
+//            File photoFile = null;
+//            try {
+//                photoFile = createImageFile();
+//            } catch (IOException ex) {
+//                // Error occurred while creating the File
+//            }
+//            // Continue only if the File was successfully created
+//            if (photoFile != null) {
+//                Uri photoURI = FileProvider.getUriForFile(this,
+//                        "com.example.android.fileprovider",
+//                        photoFile);
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+//            }
+//        }
+//    }
 }
